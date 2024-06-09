@@ -58,10 +58,13 @@ const getText = async () => {
             }
         ]);
 
-        textVal = res.text.toUpperCase();
+        textVal = res.text.toUpperCase().trim();
         if (textVal.length > 3) {
-            console.log(`${colors.red(textVal)} has more than 3 characters`);
-        } else
+            console.log(`${colors.red(textVal)} has more than 3 characters!\n`);
+        } else if(textVal == 0){
+            console.log(`${colors.red("TEXT required")}\n`);
+        }
+        else
             isValid = true;
     }
 
@@ -86,9 +89,12 @@ const getColor = async () => {
             }
         ]);
 
-        colorVal = res.color.toLowerCase();
-        if (!isColorValid(colorVal)) {
-            console.log(`${colors.red(colorVal)} is INVALID, please check your input`);
+        colorVal = res.color.toLowerCase().trim();
+        if(colorVal.length == 0){
+            console.log(`${colors.red("COLOR required")}\n`);
+        }
+        else if (!isColorValid(colorVal)) {
+            console.log(`${colors.red(colorVal)} is INVALID, please check your input\n`);
         } else
             isValid = true;
     }
