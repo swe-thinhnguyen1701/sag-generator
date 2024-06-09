@@ -1,5 +1,8 @@
 const inquirer = require("inquirer");
-const fs = require("fs");
+const ExportSVG = require("./lib/ExportSVG.js");
+const Circle = require("./lib/Circle.js");
+const Square = require("./lib/Square.js");
+const Triangle = require("./lib/Triangle.js");
 
 // VALID color keywords from CSS
 const COLOR_LIST = [
@@ -32,9 +35,17 @@ const COLOR_LIST = [
 ];
 const userInput = {
     text: "",
-    textColor: ""
+    textColor: "",
+    shape: null
 }
 
+/**
+ * getText() prompt user to enter their text with no more than 3 characters.
+ * The system will keep asking users until they recieve correct answer with 
+ * no morethan 3 characters
+ * 
+ * @returns user text input
+ */
 const getText = async () => {
     let textVal = "";
     let isValid = false;
@@ -57,6 +68,10 @@ const getText = async () => {
     return textVal;
 }
 
+/**
+ * 
+ * @returns 
+ */
 const getColor = async () => {
     let isValid = false;
     let colorVal = "";
@@ -85,11 +100,37 @@ const isColorValid = (color) => {
     return COLOR_LIST.includes(color);
 }
 
-const run = async () => {
-    const text = await getText();
-    const textColor = await getColor();
-    console.log(text);
-    console.log(textColor);
+const getShape = async () => {
+    const res = await inquirer.prompt([
+        {
+            type: "list",
+            name: "shape",
+            choices: ["Circle", "Triangle", "Square"],
+            message: "Select your favorite shape"
+        }
+    ]);
+
+    return res.shape;
 }
 
-run();
+const writeFile = (data) => {
+    const exportSVG = new ExportSVG(data);
+    exportSVG.writeSVGFile();
+}
+
+const getShapeObject = (shapeType, shapeColor) => {
+    if(shapeType === "Circle") return new Circle(shapeColor);
+    if(shapeType === "Triangle") return new Triangle(shapeColor);
+    return new Square(shapeColor);
+}
+
+const driver = async () => {
+    userInput.text = await getText();
+    userInput.textColor = await getColor();
+    const shapeType = await getShape();
+    const shapeColor = await getColor();
+    userInput.shape = getShapeObject(shapeType, shapeColor);
+    writeFile(userInput);
+}
+
+driver();
