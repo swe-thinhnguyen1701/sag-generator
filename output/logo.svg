@@ -1,9 +1,9 @@
 
             <svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">
 
-                <polygon points="150,20 50,180 250,180" fill="black" />
+                <polygon points="50,20 50,180 250,180 250,20" fill="#942b9f" />
 
-                <text x="150" y="145" font-size="60" text-anchor="middle" fill="gold">NGY</text>
+                <text x="150" y="120" font-size="60" text-anchor="middle" fill="gold">IMB</text>
 
             </svg>
         
