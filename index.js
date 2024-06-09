@@ -40,11 +40,10 @@ const userInput = {
 }
 
 /**
- * getText() prompt user to enter their text with no more than 3 characters.
- * The system will keep asking users until they recieve correct answer with 
- * no morethan 3 characters
+ * getText() prompt user to enter text with no more than 3 characters.
+ * The system will repeatedly prompt the user until a valid input is received.
  * 
- * @returns user text input
+ * @returns {Promise<string>} The user's valid text input;
  */
 const getText = async () => {
     let textVal = "";
@@ -61,7 +60,7 @@ const getText = async () => {
         textVal = res.text;
         if (textVal.length > 3) {
             console.log(`Your input (${textVal}) has more than 3 characters`);
-        }else
+        } else
             isValid = true;
     }
 
@@ -69,13 +68,15 @@ const getText = async () => {
 }
 
 /**
+ * getColor() prompt user to enter text with no more than 3 characters.
+ * The system will repeatedly prompt the user until a valid input is received.
  * 
- * @returns 
+ * @returns {Promise<string>} The user's valid color input
  */
 const getColor = async () => {
     let isValid = false;
     let colorVal = "";
-    while(!isValid){
+    while (!isValid) {
         const res = await inquirer.prompt([
             {
                 type: "input",
@@ -85,21 +86,34 @@ const getColor = async () => {
         ]);
 
         colorVal = res.color;
-        if(!isColorValid(colorVal)){
+        if (!isColorValid(colorVal)) {
             console.log("COLOR is invalid, please check your input");
-        }else
+        } else
             isValid = true;
     }
 
     return colorVal;
 };
 
+/**
+ * isColorValid() check if the provided color is valid
+ * the function validates both hexadecimal color codes and CSS color keywords.
+ * 
+ * @param {string} color - The color value to validate. this can be a hexadecimal
+ *                          color or a CSS color keyword.
+ * @returns {boolean} - true if the color is valid, otherwise false;
+ */
 const isColorValid = (color) => {
     const hexColorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/
-    if(color.charAt(0) === "#") return hexColorRegex.test(color);
+    if (color.charAt(0) === "#") return hexColorRegex.test(color);
     return COLOR_LIST.includes(color);
 }
-
+/**
+ * Prompts the user to select their favorite shape from a list of choices.
+ * 
+ * @returns {Promise<string>} - A promise that resolves to the selected 
+ *                              shape ("Circle", "Triangle", or "Square").
+ */
 const getShape = async () => {
     const res = await inquirer.prompt([
         {
@@ -113,24 +127,50 @@ const getShape = async () => {
     return res.shape;
 }
 
+/**
+ * Writes the SVG file based on the provided data.
+ * 
+ * @param {Object} data - The data object containing information for generating the SVG file.
+ */
 const writeFile = (data) => {
     const exportSVG = new ExportSVG(data);
     exportSVG.writeSVGFile();
 }
 
+/**
+ * Creates and returns a shape object based on the provided shape type and color.
+ * 
+ * @param {string} shapeType - The type of shape ("Circle", "Triangle", or "Square").
+ * @param {string} shapeColor - The color of the shape.
+ * @returns {Shape} - The instantiated shape object.
+ */
 const getShapeObject = (shapeType, shapeColor) => {
-    if(shapeType === "Circle") return new Circle(shapeColor);
-    if(shapeType === "Triangle") return new Triangle(shapeColor);
+    if (shapeType === "Circle") return new Circle(shapeColor);
+    if (shapeType === "Triangle") return new Triangle(shapeColor);
     return new Square(shapeColor);
 }
 
+/**
+ * Orchestrates the process of getting user input, creating a shape object, and writing the SVG file.
+ */
 const driver = async () => {
-    userInput.text = await getText();
-    userInput.textColor = await getColor();
-    const shapeType = await getShape();
-    const shapeColor = await getColor();
-    userInput.shape = getShapeObject(shapeType, shapeColor);
-    writeFile(userInput);
+    try {
+        // Get user input for text and text color
+        userInput.text = await getText();
+        userInput.textColor = await getColor();
+
+        // Get shape type and shape color
+        const shapeType = await getShape();
+        const shapeColor = await getColor();
+
+        // Create shape object based on shape type and color
+        userInput.shape = getShapeObject(shapeType, shapeColor);
+
+        // write SVG file
+        writeFile(userInput);
+    }catch(err) {
+        console.log("ERROR occurs\n", err);
+    }
 }
 
 driver();
