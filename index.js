@@ -1,4 +1,5 @@
 const inquirer = require("inquirer");
+const colors = require("colors");
 const ExportSVG = require("./lib/ExportSVG.js");
 const Circle = require("./lib/Circle.js");
 const Square = require("./lib/Square.js");
@@ -57,9 +58,9 @@ const getText = async () => {
             }
         ]);
 
-        textVal = res.text;
+        textVal = res.text.toUpperCase();
         if (textVal.length > 3) {
-            console.log(`Your input (${textVal}) has more than 3 characters`);
+            console.log(`${colors.red(textVal)} has more than 3 characters`);
         } else
             isValid = true;
     }
@@ -85,9 +86,9 @@ const getColor = async () => {
             }
         ]);
 
-        colorVal = res.color;
+        colorVal = res.color.toLowerCase();
         if (!isColorValid(colorVal)) {
-            console.log("COLOR is invalid, please check your input");
+            console.log(`${colors.red(colorVal)} is INVALID, please check your input`);
         } else
             isValid = true;
     }
