@@ -45,3 +45,6 @@ WHEN all inputs are valid
 THEN the system will display a success message on console.
 ```
 ![All inputs are valid](./images/valid-input.png)
+
+## Demo
+[![Play to watch](image.png)](https://youtu.be/xIYeMUGIZ2Y)
