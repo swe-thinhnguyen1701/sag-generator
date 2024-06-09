@@ -33,7 +33,9 @@ THEN system will display user's input with an error message.
 ## Tests
 To run test, you can copy the following command
 
-```npm run test```
+```
+npm run test
+```
 
 ![test cases](./images/shapes-test.png)
 
